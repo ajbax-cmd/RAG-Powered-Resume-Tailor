@@ -60,5 +60,7 @@ data/skills/*
 generated_resumes/
 
 # grok workspace
-grok_workspace/summaries/
+grok_workspace/summaries/*
+!grok_workspace/summaries/.gitkeep
+
 grok_workspace/CHANGELOG.md
