@@ -1,0 +1,12 @@
+services:
+  resume-tailor:
+    build: .
+    ports:
+      - "7860:7860"
+    volumes:
+      - ./chroma_db:/app/chroma_db
+      - ./data:/app/data
+    env_file:
+      - .env
+    environment:
+      - PYTHONUNBUFFERED=1
