@@ -180,3 +180,7 @@ rag-portfolio/
 ## For contributors / AI agents
 
 See `AGENTS.md` for project conventions and `grok_workspace/REPO_STATE.md` for current architecture notes and continuity context.
+
+## Disclaimer
+
+Resume quality depends entirely on the accuracy of your knowledge base. You are solely responsible for the information you add to it. Use this tool responsibly — the owner does not condone fabricated credentials or experience and accepts no liability for resumes built from false or misleading KB content.
