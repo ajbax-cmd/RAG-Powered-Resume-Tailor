@@ -166,7 +166,7 @@ rag-portfolio/
 | Variable | Required | Purpose |
 |----------|----------|---------|
 | `XAI_API_KEY` | Yes | Grok 4.3 generation via xAI API |
-| `GITHUB_OWNER` | No | GitHub username for `ingest_github.py` (default: `ajbax-cmd`) |
+| `GITHUB_OWNER` | No | GitHub username for `ingest_github.py` |
 | `GITHUB_TOKEN` | No | GitHub API auth for higher rate limits |
 
 ## Tech stack

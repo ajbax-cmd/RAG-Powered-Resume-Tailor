@@ -13,7 +13,7 @@ from openai import OpenAI
 import requests
 from dotenv import load_dotenv
 
-OWNER = os.environ.get("GITHUB_OWNER", "ajbax-cmd")
+OWNER = os.environ.get("GITHUB_OWNER")
 OUTPUT_PATH = Path(__file__).resolve().parent / "data" / "projects"
 GITHUB_API = "https://api.github.com"
 
