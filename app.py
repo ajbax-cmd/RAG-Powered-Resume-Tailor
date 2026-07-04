@@ -72,8 +72,8 @@ Generate ONLY the Education section. This section is usually stable — use exac
 Return JSON:
 {{"education": [{{"degree": "...", "institution": "...", "dates": "..."}}]}}"""
 
-OBJECTIVE_SYSTEM_PROMPT = SECTION_BASE_RULES + """
-Generate ONLY the Objective section for a job-tailored resume.
+SUMMARY_SYSTEM_PROMPT = SECTION_BASE_RULES + """
+Generate ONLY the Summary section for a job-tailored resume.
 
 FRAMING:
 - Write from the employer's perspective — what the candidate brings, not what they want.
@@ -92,7 +92,7 @@ SYNTHESIS RULES:
 - Length: 2-3 lines when rendered. No run-on sentences.
 
 Return JSON:
-{{"objective": "2 sentence tailored summary"}}"""
+{{"summary": "2 sentence tailored summary"}}"""
 
 HEADER_SYSTEM_PROMPT = SECTION_BASE_RULES + """
 
@@ -219,7 +219,7 @@ def get_local_context(question: str) -> str:
 
 def count_resume_words(resume_data: dict) -> int:
     parts: list[str] = []
-    for key in ("name", "contact", "objective"):
+    for key in ("name", "contact", "summary"):
         value = resume_data.get(key, "")
         if isinstance(value, str):
             parts.append(value)
@@ -285,7 +285,7 @@ def extract_section(text: str, section_key: str):
         return parsed[section_key]
     if section_key in ("skills", "education", "experience", "projects") and isinstance(parsed, list):
         return parsed
-    if section_key == "objective" and isinstance(parsed, str):
+    if section_key == "summary" and isinstance(parsed, str):
         return parsed
     raise ValueError(f"Could not extract '{section_key}' from model response")
 
@@ -298,6 +298,7 @@ def call_grok(system_prompt: str, user_prompt: str, *, temperature: float = 0.3)
             {"role": "user", "content": user_prompt},
         ],
         temperature=temperature,
+        reasoning_effort="high",
         max_completion_tokens=4000,
     )
     return response.choices[0].message.content
@@ -428,7 +429,7 @@ def _format_section_summary(section_name: str, content) -> str:
     return f"{section_name}:\n{json.dumps(content, indent=2)}"
 
 
-def generate_objective_section(
+def generate_summary_section(
     job_description: str,
     *,
     experience: list,
@@ -443,14 +444,14 @@ def generate_objective_section(
         ]
     )
     raw = call_grok(
-        OBJECTIVE_SYSTEM_PROMPT,
+        SUMMARY_SYSTEM_PROMPT,
         f"""Job Description:
 {job_description}
 
-Already-generated resume sections (use for tailoring the objective):
+Already-generated resume sections (use for tailoring the summary):
 {generated_context}""",
     )
-    return extract_section(raw, "objective")
+    return extract_section(raw, "summary")
 
 
 def build_resume_by_sections(
@@ -466,7 +467,7 @@ def build_resume_by_sections(
     projects = generate_projects_section(job_description, ranked_projects, expand=expand)
     skills = generate_skills_section(job_description)
     education = generate_education_section(job_description)
-    objective = generate_objective_section(
+    summary = generate_summary_section(
         job_description,
         experience=experience,
         projects=projects,
@@ -476,7 +477,7 @@ def build_resume_by_sections(
     resume_data = {
         "name": header.get("name", ""),
         "contact": header.get("contact", ""),
-        "objective": objective,
+        "summary": summary,
         "education": education,
         "skills": skills,
         "experience": experience,

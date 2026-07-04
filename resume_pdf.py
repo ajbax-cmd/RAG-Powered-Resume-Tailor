@@ -201,10 +201,10 @@ def build_resume_pdf(resume_data: dict, job_title: str = "") -> str:
     def add_section(title: str) -> None:
         story.append(Paragraph(title.upper(), section_style))
 
-    objective = resume_data.get("objective", "").strip()
-    if objective:
-        add_section("Objective")
-        story.append(Paragraph(objective, body_style))
+    summary = resume_data.get("summary", "").strip()
+    if summary:
+        add_section("Summary")
+        story.append(Paragraph(summary, body_style))
 
     education = resume_data.get("education", [])
     if education:
